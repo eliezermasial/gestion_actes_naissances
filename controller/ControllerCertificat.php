@@ -22,10 +22,10 @@ function login_user($get_request) {
         $get_request['password_user'] === $recupereUser['password_user']
     )
     {
-        header("Location: index.php");
+        header("Location: listCertificat.php");
     }
     else{
-        header("Location: login.php");
+        header("Location: index.php");
     }
 }
 
@@ -60,7 +60,7 @@ function enregistrer_certificat($data) {
  */
 function get_certificats() {
     $pdo = db_connect();
-    $stmt = $pdo->query("SELECT * FROM certificats_naissance ORDER BY date_enregistrement DESC");
+    $stmt = $pdo->query("SELECT * FROM certificats_naissance ORDER BY date_enregistrement ASC");
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 

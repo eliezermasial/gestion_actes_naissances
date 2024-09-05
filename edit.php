@@ -20,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     ];
 
     $pdo = db_connect();
+
     $stmt = $pdo->prepare("
         UPDATE certificats_naissance SET
             nom_enfant = :nom_enfant,
@@ -35,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     ");
 
     if ($stmt->execute($data)) {
-        header("Location: index.php");
+        header("Location: listCertificat.php");
         exit();
     } else {
         $message = "Erreur lors de la modification.";
@@ -58,12 +59,15 @@ if (isset($_GET['id'])) {
 </head>
 <body>
 <div class="container mt-5">
-    <h1>Modifier un Certificat de Naissance</h1>
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1>Modifier un Certificat de Naissance</h1>
+        <a href="listCertificat.php" class="btn btn-primary">Retour</a>
+    </div>
     <?php if (isset($message)): ?>
         <div class="alert alert-danger"><?= $message ?></div>
     <?php endif; ?>
  
-    <form method="post" action="enregistrer.php">
+    <form method="post" action="edit.php" class="group-form mt-5 mb-5">
 
         <input type="hidden" name="id" value="<?= htmlspecialchars($certificat['id']) ?>">
 
