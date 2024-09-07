@@ -130,10 +130,16 @@ function modifier_certificat($id, $data) {
  *@param int $id L'identifiant du certificat à psupprimer.
  * @return bool Retourne vrai si le certificat est supprimé , sinon faux.
  */
-function supprimer_certificat($id) {
+function delete_certificat($id,$message) {
     $pdo = db_connect();
     $stmt = $pdo->prepare("DELETE FROM certificats_naissance WHERE id = :id");
-    return $stmt->execute(['id' => $id]);
+
+    if ($stmt->execute(['id' => $id])) {
+        header("Location: index.php");
+        exit();
+    } else {
+        $message = "Erreur lors de la suppression.";
+    }
 }
 
 /**

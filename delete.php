@@ -7,15 +7,8 @@ require_once 'controller/ControllerCertificat.php';
 
 if (isset($_GET['id'])) {
     $id = intval($_GET['id']);
-    $pdo = db_connect();
     
-    $stmt = $pdo->prepare("DELETE FROM certificats_naissance WHERE id = :id");
-    if ($stmt->execute(['id' => $id])) {
-        header("Location: index.php");
-        exit();
-    } else {
-        $message = "Erreur lors de la suppression.";
-    }
+    delete_certificat($id,$message);
 } else {
     $message = "ID du certificat manquant.";
 }

@@ -48,7 +48,7 @@ $certificats = get_certificats();
                 <td><?= htmlspecialchars($certificat['numero_enregistrement']) ?></td>
                 <td>
                     <a href="edit.php?id=<?= htmlspecialchars($certificat['id']) ?>" class="btn btn-warning btn-sm mb-1">Edite</a>
-                    <a href="postCertificat.php?= htmlspecialchars($certificat['id']) ?>" class="btn btn-warning btn-sm mb-1">voir certificat</a>
+                    <a href="postCertificat.php?id=<?= htmlspecialchars($certificat['id']) ?>" class="btn btn-warning btn-sm mb-1">voir certificat</a>
                     <a href="delete.php?id=<?= htmlspecialchars($certificat['id']) ?>" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce certificat ?');">delete</a>
                 </td>
             </tr>

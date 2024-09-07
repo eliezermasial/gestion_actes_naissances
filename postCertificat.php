@@ -5,11 +5,13 @@ error_reporting(E_ALL);
 
 require_once 'controller/ControllerCertificat.php';
 
-if(!isset($_GET["id"]) || empty($_GET["id"]) ){
-    header("index.php");
+if (!isset($_GET["id"]) || empty($_GET["id"])) {
+    header("Location: index.php");
+    exit;
 }
-$id=$_GET["id"];
-$certificat= post_certificat($id);
+
+$id = $_GET["id"];
+$certificat = post_certificat($id);
 
 ?>
 
@@ -21,7 +23,6 @@ $certificat= post_certificat($id);
     <title>certificat</title>
 </head>
 <body>
-    
     <center>
         <table class="table table-bordered mt-5">
             <thead>
@@ -34,7 +35,6 @@ $certificat= post_certificat($id);
                     <th>Nom de la Mère</th>
                     <th>Date d'Enregistrement</th>
                     <th>Numéro d'Enregistrement</th>
-                    <th>Action</th>
                 </tr>   
             </thead>
             <tbody>
@@ -50,10 +50,13 @@ $certificat= post_certificat($id);
                 </tr>
             </tbody>
         </table>
+
         <div>
-            <a href="genpdf.php?id=<?= htmlspecialchars($certificat['id']) ?>" class="btn btn-warning btn-sm mb-1">telecharger</a>
+            <a href="genpdf.php?id=<?= htmlspecialchars($certificat['id']) ?>"
+             class="btn btn-warning btn-sm mb-1">
+             telecharger
+            </a>
         </div>
     </center>
-
 </body>
 </html>
