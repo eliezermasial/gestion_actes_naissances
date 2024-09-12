@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'controller/ControllerCertificat.php';
+require '../pages/listCertificat.php';
 
 $certificats = get_certificats();
 ?>
@@ -12,11 +12,15 @@ $certificats = get_certificats();
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Liste des Certificats de Naissance</title>
+    <title>Accueil</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-<div class="container mt-5">
+<body class="body">
+<div class="container mt-1">
     <div class="d-flex justify-content-between align-items-center mb-5">
         <h1>Liste des Certificats de Naissance</h1>
         <a href="enregistrer.php" class="btn btn-success">Enregistrer un Nouveau Certificat</a>

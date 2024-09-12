@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'dataBase/config_db.php';
+require_once '../dataBase/config_db.php';
 
 /**
  * Lgin connexion de l'utilisateur.
@@ -22,7 +22,7 @@ function login_user($get_request) {
         $get_request['password_user'] === $recupereUser['password_user']
     )
     {
-        header("Location: listCertificat.php");
+        header("Location: pages/listCertificat.php");
     }
     else{
         header("Location: index.php");

@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'controller/ControllerCertificat.php';
+require_once '../controller/ControllerCertificat.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = [
@@ -36,11 +36,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Enregistrer un Certificat</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body style="background-color: rgba(0, 0, 0, 0.11);">
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Enregistrer un Certificat de Naissance</h1>
-        <a href="index.php" class="btn btn-success">Retour</a>
+        <a href="listCertificat.php" class="btn btn-primary">Retour</a>
     </div>
     
     <?php if (isset($message)): ?>
@@ -86,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <label for="profession_mere" class="form-label">Profession de la Mère</label>
             <input type="text" name="profession_mere" id="profession_mere" class="form-control">
         </div>
-        <button type="submit" class="btn btn-primary">Enregistrer</button>
+        <button type="submit" class="btn btn-success">Enregistrer</button>
     </form>
 </div>
 </body>

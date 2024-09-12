@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'controller/ControllerCertificat.php';
+require_once '../controller/ControllerCertificat.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     $data = [
@@ -55,9 +55,10 @@ if (isset($_GET['id'])) {
 <head>
     <meta charset="UTF-8">
     <title>Modifier un Certificat</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
+<body style="background-color: rgba(0, 0, 0, 0.11);">
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-5">
         <h1>Modifier un Certificat de Naissance</h1>
@@ -112,7 +113,7 @@ if (isset($_GET['id'])) {
             <input type="text" name="profession_mere" id="profession_mere" class="form-control" value="<?= htmlspecialchars($certificat['profession_mere']) ?>">
         </div>
         <!-- Ajoutez les autres champs ici -->
-        <button type="submit" class="btn btn-primary">Modifier</button>
+        <button type="submit" class="btn btn btn-success">Modifier</button>
         
     </form>
 </div>
