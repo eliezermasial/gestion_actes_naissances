@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once './controller/ControllerCertificat.php';
+require_once 'controller/ControllerCertificat.php';
 
 
 if (!empty($_POST['name_user']) && !empty($_POST['password_user'])) {
@@ -21,7 +21,7 @@ if (!empty($_POST['name_user']) && !empty($_POST['password_user'])) {
 <html lang="fr">
 <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

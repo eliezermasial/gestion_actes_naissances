@@ -1,0 +1,10 @@
+ <div class="signature-section">
+        <div class="left">
+            <p>Cachet :</p> <!-- Correction du mot "Cachet" pour l'alignement -->
+        </div>
+        <div class="right text-end">
+            <p>Dr MULENDE HANS</p>
+            <p>CNO: 2780</p>
+            <p>Date et Signature</p>
+        </div>
+    </div>

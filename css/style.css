@@ -1,0 +1,179 @@
+@import url(variables.css);
+@import url(media.css);
+
+*::before
+*::after{
+    box-sizing: border-box;
+    font-family: 'Oswald', sans-serif;
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.11);
+}
+.body{
+    background-color: rgba(0, 0, 0, 0.411);
+}
+table{
+    background-color: rgba(240, 248, 255, 0.842);
+}
+.form-container{
+    z-index: 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    height: 400px;
+    padding-block: 48px;
+    padding-inline: 40px;
+    background-color: var(--white-trans-);
+    border: 1px solid var(--white-fb-);
+    border-radius: 16px;
+}
+.form-container h1{
+    color: var(--white-);
+    text-align: center;
+    font-size: 2em;
+    margin-block-end: 3rem;
+}
+form .form-group{
+    position: relative;
+    margin-block-end: 2rem;
+}
+.form-group input{
+    width: 100%;
+    height: 48px;
+    font-size: 1em;
+    font-weight: 500;
+    padding-block: 8px 0;
+    padding-inline: 8px 36px;
+    background-color: transparent;
+    color: var(--white-);
+    outline: none;
+    border: none;
+    border-bottom: 1px solid var(--white-);
+    transition: 0.25s ease-in-out;
+}
+.form-group input:focus{
+    border-color: var(--orangered-);
+}
+.form-group input:valid{
+    border-color: var(--orangered-);
+}
+.form-group label{
+    position: absolute;
+    color: var(--white-);
+    top: 50%;
+    left: 8px;
+    transform: translateY(-50%);
+    font-weight: 500;
+    pointer-events: none;
+}
+.form-group input:focus ~ label,
+.form-group input:valid ~ label{
+    top: 0;
+    color: var(--orangered-);
+}
+.form-group span{
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    font-size: 1.1em;
+    color: var(--white-);
+    transform: translateY(-50%);
+    transition: 0.25s ease-in-out;
+}
+.form-group input:focus ~ span,
+.form-group input:valid ~ span{
+    color: var(--orangered-);
+}
+.form-option{
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    font-weight: 500;
+    margin-block-end: 1rem;
+    color: var(--white-);
+}
+.form-option a{
+    color: var(--white-);
+    text-decoration: none;
+}
+.form-option input{
+    accent-color: var(--orangered-);
+}
+.form-option a:hover{
+    color: var(--orangered-);
+    text-decoration: underline;
+}
+button{
+    width: 100%;
+    height: 48px;
+    font-size: 16px;
+    font-weight: 700;
+    padding: 8px 16px;
+    margin-block: 10px 20px;
+    border: none;
+    border-radius: 50px;
+    background-color: var(--orangered-);
+    color: var(--white-);
+    transition: color 0.35s ease-in-out, background-color 0.35s ease-in-out;
+}
+button:hover{
+    background-color: var(--black-pr);
+    border: 1px solid var(--orangered-);
+    color: var(--orangered-);
+}
+.registe{
+    text-align: center;
+}
+.registe p{
+    color: var(--white-);
+}
+.registe a{
+    color: var(--white-);
+    text-decoration: none;
+    font-weight: 500;
+}
+.registe a:hover{
+    color: var(--orangered-);
+    text-decoration: underline;
+}
+
+.anime{
+    overflow: hidden;
+    position: absolute;
+    height: 500px;
+    width: 500px;
+    background: linear-gradient(60deg, var(--bh-rose-) 10%, var(--bh-orang-) 100%);
+    border-radius: 30% 70% 61% 39% / 30% 30% 70% 70% ;
+    transform: translate(50px,40px) rotate(60deg);
+    transition: 1s cubic-bezier(0.215, 0.610, 0.355, 1);
+    animation: anime 16s infinite alternate;
+}
+
+.anime:hover{
+    filter: blur(30px);
+    width: 560px;
+    height: 560px;
+    
+    box-shadow: inset 100px 100px var(--blue-), inset 200px 200px var(--yellow-), inset 300px 300px var(--red-)
+} 
+@keyframes anime{
+    5%{
+        transform: translate(30px,30px) rotate(60deg);
+    }
+    40%{
+        transform: translate(-60%,-50%) rotate(30deg);
+        border-radius: 30% 70% 27% 73% / 30% 30% 70% 70% ;
+    }
+    75%{
+        transform: translate(0%,-100%) rotate(0deg);
+        border-radius: 65% 35% 0% 100% / 63% 63% 37% 37% ;
+    }
+}

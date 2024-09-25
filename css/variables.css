@@ -1,0 +1,13 @@
+:root{
+    --black-: rgba(0, 0, 0, 0.959);
+    --black-pr-: black;
+    --white-: #fff;
+    --white-trans-: rgba(225, 225, 225, 0.15);
+    --white-fb-: rgba(225, 225, 225, 0.2);
+    --orangered-: orangered;
+    --bh-orang-: rgb(167, 130, 11);
+    --bh-rose-: rgb(170, 24, 114);
+    --blue-: rgb(41, 140, 231);
+    --yellow-: rgb(209, 221, 38);
+    --red-: rgb(204, 24, 24);
+}
