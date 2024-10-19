@@ -156,19 +156,18 @@ svg {
             <h5 class="fw-bold">CERTIFICAT DE NAISSANCE</h5>
         </div>
         
-        <div class="content mt-5">
-            <p>Je soussigné : <span class="input-line text-center"><?= $certificat['nom_enfant'] ?></span></p>
-            <p>Certifie que Madame : <span class="input-line"><?= $certificat['nom_mere'] ?></span></p>
+        <div class="content ">
+            <p>Je soussigné : <?= $certificat['nom_enfant'] ?></p>
+            <p>Certifie que Madame : <?= $certificat['nom_mere'] ?></p>
             <p>Epouse de Monsieur : <span class="input-line"></span></p>
-            <p>a accouché le : <span class="input-line"><?= $certificat['date_enregistrement'] ?></span></p>
-            <p>liéu de naissance : <span class="input-line"><?= $certificat['lieu_naissance'] ?></span></p>
-            <p>Sexe   :  <span class="input-line "><?= $certificat['sexe'] ?></span></p>
-            <p>VA P.O : <span class="input-line "></span></p>
-            <p>Numero d'enregistreent : <span class="input-line "><?= $certificat['numero_enregistrement'] ?></span></p>
-            <p>Rendez-vous : <span class="input-line"></span></p>
+            <p>a accouché le : <?= $certificat['date_enregistrement'] ?></p>
+            <p>Sexe   :  <?= $certificat['sexe'] ?></p>
+            <!--<p>VA P.O : <span class="input-line "></span></p>-->
+            <p>Numero d'enregistreent : <?= $certificat['numero_enregistrement'] ?></p>
+            <p>Rendez-vous : </p>
         </div>
         
-        <div class="signature-section mt-3">
+        <div class="signature-section ">
             <div class="left">
                 <p>Cachet :</p> <!-- Correction du mot "Cachet" pour l'alignement -->
             </div>
