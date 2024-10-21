@@ -11,7 +11,7 @@ $url = $_SERVER['REQUEST_URI'];
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" translate="no">
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
@@ -280,18 +280,21 @@ $url = $_SERVER['REQUEST_URI'];
                 <div class="card-body">
                   <h4 class="card-title">Liste des Certificats de Naissance</h4>
                   <div class="table-responsive pt-3">
-                    <table class="table table-bordered text-center">
+                    <table class="table table-bordered">
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>Nom de l'Enfant</th>
-                          <th>Date de Naissance</th>
-                          <th>Lieu de Naissance</th>
+                          <th>Nom-enfant</th>
+                          <th>Post-Nom</th>
+                          <th>Pre-Nom</th>
+                          <th>Dt. Naiss</th>
+                          <th>L. Naiss</th>
                           <th>Sexe</th>
-                          <th>Nom de la Mère</th>
-                          <th>Date d'Enregistrement</th>
-                          <th>Numéro d'Enregistrement</th>
-                          <th>Action</th>
+                          <th>Nom-Mère</th>
+                          <th>Poid</th>
+                          <th>Dt. enreg</th>
+                          <th>N° d'enreg</th>
+                          <th>Acte</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -305,13 +308,13 @@ $url = $_SERVER['REQUEST_URI'];
                             <td><?= htmlspecialchars($certificat['lieu_naissance']) ?></td>
                             <td><?= htmlspecialchars($certificat['sexe']) ?></td>
                             <td><?= htmlspecialchars($certificat['nom_mere']) ?></td>
-                            <td><?= htmlspecialchars($certificat['poids']) ?></td>
+                            <td><?= htmlspecialchars($certificat['poids']) ?> Kg</td>
                             <td><?= htmlspecialchars($certificat['date_enregistrement']) ?></td>
                             <td><?= htmlspecialchars($certificat['numero_enregistrement']) ?></td>
                             <td class="d-fbloc">
                                 <a href="edit.php?id=<?= htmlspecialchars($certificat['id']) ?>" class="btn  btn-info p-1">Edit</a>
-                                <a href="postCertificat.php?id=<?= htmlspecialchars($certificat['id']) ?>" class="btn btn-primary p-1 mt-1 mb-1">certificat</a>
-                                <a href="delete.php?id=<?= htmlspecialchars($certificat['id']) ?>" class="btn btn-danger p-1" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce certificat ?');">delete</a>
+                                <a href="delete.php?id=<?= htmlspecialchars($certificat['id']) ?>" class="btn btn-danger p-1 mt-1 mb-1" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce certificat ?');">delete</a>
+                                <a href="postCertificat.php?id=<?= htmlspecialchars($certificat['id']) ?>" class="btn btn-primary p-1">certificat</a>
                             </td>
                         </tr>
                       <?php endforeach; ?>

@@ -238,21 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
-            <div class="d-flex sidebar-profile">
-              <div class="sidebar-profile-image">
-                <img src="../../images/faces/face29.png" alt="image">
-                <span class="sidebar-status-indicator"></span>
-              </div>
-              <div class="sidebar-profile-name">
-                <p class="sidebar-name">
-                  Kenneth Osborne
-                </p>
-                <p class="sidebar-designation">
-                  Welcome
-                </p>
-              </div>
-            </div>
-            <div class="nav-search">
+            <div class="nav-search mt-2">
               <div class="input-group">
                 <input type="text" class="form-control" placeholder="Type to search..." aria-label="search" aria-describedby="search">
                 <div class="input-group-append">
@@ -283,18 +269,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-              <i class="typcn typcn-chart-pie-outline menu-icon"></i>
-              <span class="menu-title">Charts</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="charts">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../../pages/charts/chartjs.html">ChartJs</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
               <i class="typcn typcn-th-small-outline menu-icon"></i>
               <span class="menu-title">Tables</span>
@@ -306,18 +280,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               </ul>
             </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
-              <i class="typcn typcn-compass menu-icon"></i>
-              <span class="menu-title">Icons</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="icons">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../../pages/icons/mdi.html">Mdi icons</a></li>
-              </ul>
-            </div>
-          </li>
+          
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
               <i class="typcn typcn-user-add-outline menu-icon"></i>
@@ -346,13 +309,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                   <?php if (isset($message)): ?>
                     <div class="alert alert-danger"><?= $message ?></div>
                   <?php endif; ?>
-                  <form class="form-sample" action="edit.php" method="Post">
+                  <form class="form-sample" action="enregistrer.php" method="Post">
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Nom enfant</label>
                           <div class="col-sm-9">
                             <input type="text" name="nom_enfant" id="nom_enfant" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Post-nom</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="post_nom" id="post_nom" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Pre-nom</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="pre_nom" id="pre_nom" class="form-control" required/>
                           </div>
                         </div>
                       </div>
@@ -431,7 +412,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                           </div>
                         </div>
                       </div>
-                      <!-- ajoute le champs poids d'enfant -->
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Poid</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="poids" id="poids" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <button type="submit" class="btn btn-primary mr-2">Submit</button>
                   </form>

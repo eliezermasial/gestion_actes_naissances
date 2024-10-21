@@ -369,6 +369,24 @@ if (isset($_GET['id'])) {
                       </div>
                       <div class="col-md-6">
                         <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Post Nom</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="post_nom" id="post_nom" class="form-control" value="<?= htmlspecialchars($certificat['post_nom']) ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Pre-nom</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="pre_nom" id="pre_nom" class="form-control" value="<?= htmlspecialchars($certificat['pre_nom']) ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Nom de Mere</label>
                           <div class="col-sm-9">
                             <input type="text" name="nom_mere" id="nom_mere" class="form-control" value="<?= htmlspecialchars($certificat['nom_mere']) ?>" required/>
@@ -376,6 +394,7 @@ if (isset($_GET['id'])) {
                         </div>
                       </div>
                     </div>
+
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group row">
@@ -442,7 +461,21 @@ if (isset($_GET['id'])) {
                           </div>
                         </div>
                       </div>
-                      <!-- ajoute le champs poids d'enfant -->
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Poid</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="poids" id="poids" class="form-control" value="<?= htmlspecialchars($certificat['poids']) ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <div class="col-sm-9">
+                            <input type="hidden" name="id" id="id" class="form-control" value="<?= htmlspecialchars($certificat['id']) ?>" required/>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                     <button type="submit" class="btn btn-primary mr-2">Submit</button>
                   </form>

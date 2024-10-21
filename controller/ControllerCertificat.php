@@ -29,7 +29,7 @@ function login_user($get_request) {
         // Si les informations sont incorrectes, redirection vers index.php
         header("Location: index.php");
     }
-    
+
 }
 
 
@@ -45,13 +45,14 @@ function enregistrer_certificat($data) {
     // Préparation de la requête SQL pour insérer un nouveau certificat de naissance
     $stmt = $pdo->prepare("
         INSERT INTO certificats_naissance (
-            nom_enfant, date_naissance, heure_naissance, 
-            lieu_naissance, sexe, nom_mere, nationalite_mere, 
-            adresse_mere, profession_mere, date_enregistrement, numero_enregistrement
+            nom_enfant, date_naissance ,heure_naissance , 
+            lieu_naissance ,sexe ,nom_mere ,nationalite_mere , 
+            adresse_mere ,profession_mere ,date_enregistrement ,numero_enregistrement ,poids ,
+            post_nom, pre_nom
         ) VALUES (
             :nom_enfant, :date_naissance, :heure_naissance, 
             :lieu_naissance, :sexe, :nom_mere, :nationalite_mere, 
-            :adresse_mere, :profession_mere, :date_enregistrement, :numero_enregistrement
+            :adresse_mere, :profession_mere, :date_enregistrement, :numero_enregistrement, :poids, :post_nom, :pre_nom
         )
     ");
 
@@ -112,7 +113,7 @@ function delete_certificat($id, &$message) { // Ajout de & pour passer $message 
     // Exécution de la requête en passant l'ID en paramètre pour éviter les injections SQL
     if ($stmt->execute(['id' => $id])) {
         // Si la suppression réussit, redirection vers la page d'accueil
-        header("Location: index.php");
+        header("Location: listCertificat.php");
         exit(); // Terminer l'exécution du script après la redirection
     } else {
         // Si la suppression échoue, on modifie le message d'erreur
