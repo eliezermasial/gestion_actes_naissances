@@ -6,6 +6,8 @@ error_reporting(E_ALL);
 require 'controller/ControllerCertificat.php';
 
 $certificats = get_certificats();
+
+$url = $_SERVER['REQUEST_URI'];
 ?>
 
 <!DOCTYPE html>
@@ -210,21 +212,7 @@ $certificats = get_certificats();
       <nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
-            <div class="d-flex sidebar-profile">
-              <div class="sidebar-profile-image">
-                <img src="../../images/faces/face29.png" alt="image">
-                <span class="sidebar-status-indicator"></span>
-              </div>
-              <div class="sidebar-profile-name">
-                <p class="sidebar-name">
-                  Kenneth Osborne
-                </p>
-                <p class="sidebar-designation">
-                  Welcome
-                </p>
-              </div>
-            </div>
-            <div class="nav-search">
+            <div class="nav-search mt-2">
               <div class="input-group">
                 <input type="text" class="form-control" placeholder="Type to search..." aria-label="search" aria-describedby="search">
                 <div class="input-group-append">
@@ -255,18 +243,6 @@ $certificats = get_certificats();
             </div>
           </li>
           <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-              <i class="typcn typcn-chart-pie-outline menu-icon"></i>
-              <span class="menu-title">Charts</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="charts">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../../pages/charts/chartjs.html">ChartJs</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
               <i class="typcn typcn-th-small-outline menu-icon"></i>
               <span class="menu-title">Tables</span>
@@ -275,18 +251,6 @@ $certificats = get_certificats();
             <div class="collapse" id="tables">
               <ul class="nav flex-column sub-menu">
                 <li class="nav-item"> <a class="nav-link" href="../../pages/tables/basic-table.html">Basic table</a></li>
-              </ul>
-            </div>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
-              <i class="typcn typcn-compass menu-icon"></i>
-              <span class="menu-title">Icons</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="icons">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../../pages/icons/mdi.html">Mdi icons</a></li>
               </ul>
             </div>
           </li>
@@ -315,11 +279,8 @@ $certificats = get_certificats();
               <div class="card">
                 <div class="card-body">
                   <h4 class="card-title">Liste des Certificats de Naissance</h4>
-                  <p class="card-description">
-                    Add class <code>.table-{color}</code>
-                  </p>
                   <div class="table-responsive pt-3">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered text-center">
                       <thead>
                         <tr>
                           <th>#</th>
@@ -338,15 +299,18 @@ $certificats = get_certificats();
                         <tr class="table-info">
                             <td><?= $certificat['id'] ?></td>
                             <td><?= htmlspecialchars($certificat['nom_enfant']) ?></td>
+                            <td><?= htmlspecialchars($certificat['post_nom']) ?></td>
+                            <td><?= htmlspecialchars($certificat['pre_nom']) ?></td>
                             <td><?= htmlspecialchars($certificat['date_naissance']) ?></td>
                             <td><?= htmlspecialchars($certificat['lieu_naissance']) ?></td>
                             <td><?= htmlspecialchars($certificat['sexe']) ?></td>
                             <td><?= htmlspecialchars($certificat['nom_mere']) ?></td>
+                            <td><?= htmlspecialchars($certificat['poids']) ?></td>
                             <td><?= htmlspecialchars($certificat['date_enregistrement']) ?></td>
                             <td><?= htmlspecialchars($certificat['numero_enregistrement']) ?></td>
-                            <td class="d-flex">
-                                <a href="edit.php?id=<?= htmlspecialchars($certificat['id']) ?>" class="btn  btn-info p-1">Edite</a>
-                                <a href="postCertificat.php?id=<?= htmlspecialchars($certificat['id']) ?>" class="btn btn-primary p-1">certificat</a>
+                            <td class="d-fbloc">
+                                <a href="edit.php?id=<?= htmlspecialchars($certificat['id']) ?>" class="btn  btn-info p-1">Edit</a>
+                                <a href="postCertificat.php?id=<?= htmlspecialchars($certificat['id']) ?>" class="btn btn-primary p-1 mt-1 mb-1">certificat</a>
                                 <a href="delete.php?id=<?= htmlspecialchars($certificat['id']) ?>" class="btn btn-danger p-1" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce certificat ?');">delete</a>
                             </td>
                         </tr>

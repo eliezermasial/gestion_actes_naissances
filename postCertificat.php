@@ -105,6 +105,10 @@ svg {
     --bs-btn-disabled-bg: #198754;
     --bs-btn-disabled-border-color: #198754;
 }
+@font-face {
+    font-family: 'FontAwesome';
+    src: url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/webfonts/fa-solid-900.woff2') format('woff2');
+}
 
 </style>
 <body>

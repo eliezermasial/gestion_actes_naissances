@@ -22,5 +22,4 @@ use Dompdf\Options;
  $dompdf->setPaper('A4','portrait');
  $dompdf->render();
  $dompdf->stream();
-
 ?>

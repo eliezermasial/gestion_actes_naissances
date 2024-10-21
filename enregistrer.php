@@ -7,17 +7,20 @@ require_once 'controller/ControllerCertificat.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = [
-        'nom_enfant' => $_POST['nom_enfant'],
-        'date_naissance' => $_POST['date_naissance'],
-        'heure_naissance' => $_POST['heure_naissance'],
-        'lieu_naissance' => $_POST['lieu_naissance'],
         'sexe' => $_POST['sexe'],
+        'poids' => $_POST['poids'],
+        'pre_nom' => $_POST['pre_nom'],
         'nom_mere' => $_POST['nom_mere'],
-        'nationalite_mere' => $_POST['nationalite_mere'],
-        'adresse_mere' => $_POST['adresse_mere'],
-        'profession_mere' => $_POST['profession_mere'],
+        'post_nom' => $_POST['post_nom'],
+        'nom_enfant' => $_POST['nom_enfant'],
         'date_enregistrement' => date('Y-m-d'),
-        'numero_enregistrement' => uniqid('CERT-')
+        'adresse_mere' => $_POST['adresse_mere'],
+        'numero_enregistrement' => uniqid('CERT-'),
+        'lieu_naissance' => $_POST['lieu_naissance'],
+        'date_naissance' => $_POST['date_naissance'],
+        'profession_mere' => $_POST['profession_mere'],
+        'heure_naissance' => $_POST['heure_naissance'],
+        'nationalite_mere' => $_POST['nationalite_mere'],
     ];
 
     if (enregistrer_certificat($data)) {
@@ -334,22 +337,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       
       <!-- partial -->
       <div class="main-panel">        
-        <div class="content-wrapper">
+      <div class="content-wrapper">
           <div class="row">
             <div class="col-12 grid-margin">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">Enregistrer un enfant</h4>
+                  <h4 class="card-title">Enregistrer un Enfant</h4>
                   <?php if (isset($message)): ?>
                     <div class="alert alert-danger"><?= $message ?></div>
                   <?php endif; ?>
-                  <form class="form-sample" action="enregistrer.php" method="Post">
+                  <form class="form-sample" action="edit.php" method="Post">
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Nom enfant</label>
                           <div class="col-sm-9">
-                            <input type="text" name="nom_enfant" id="nom_enfant" class="form-control" />
+                            <input type="text" name="nom_enfant" id="nom_enfant" class="form-control" required/>
                           </div>
                         </div>
                       </div>
@@ -357,7 +360,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Nom de Mere</label>
                           <div class="col-sm-9">
-                            <input type="text" name="nom_mere" id="nom_mere" class="form-control" required>
+                            <input type="text" name="nom_mere" id="nom_mere" class="form-control" required/>
                           </div>
                         </div>
                       </div>
@@ -375,7 +378,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Date de Naissance</label>
                           <div class="col-sm-9">
-                            <input type="date" name="date_naissance" id="date_naissance" class="form-control" placeholder="dd/mm/yyyy" required />
+                            <input type="date" name="date_naissance" id="date_naissance" class="form-control" required />
                           </div>
                         </div>
                       </div>
@@ -385,7 +388,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Lieu de Naissance</label>
                           <div class="col-sm-9">
-                            <input type="text" name="lieu_naissance" id="lieu_naissance" class="form-control" />
+                            <input type="text" name="lieu_naissance" id="lieu_naissance" class="form-control" required/>
                           </div>
                         </div>
                       </div>
@@ -411,7 +414,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Nationalité de la Mère</label>
                           <div class="col-sm-9">
-                            <input type="text" name="nationalite_mere" id="nationalite_mere" class="form-control" required />
+                            <input type="text" name="nationalite_mere" id="nationalite_mere" class="form-control" required/>
                           </div>
                         </div>
                       </div>
