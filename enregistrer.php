@@ -3,28 +3,79 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'controller/ControllerCertificat.php';
+require_once 'controller/controller.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $data = [
-        'sexe' => $_POST['sexe'],
-        'poids' => $_POST['poids'],
-        'pre_nom' => $_POST['pre_nom'],
+  $dataMere = [
+      'nom'=> $_POST['nom_mere'],
+      'firstName' => $_POST['postnom_mere'],
+      'lastName' => $_POST['prenom_mere'],
+      'adresse' => $_POST['adresse_mere'],
+      'date_naissance' => $_POST['date_naissance_mere'],
+      'lieu_naissance' => $_POST['lieu_naissance_mere'],
+      'profession' => $_POST['profession_mere'],
+      'nationalite' => $_POST['nationalite_mere'],
+      'contact' => $_POST['contact_mere'],
+    ];
+    $dataPere = [
+      'nom'=> $_POST['nom_pere'],
+      'firstName' => $_POST['postnom_pere'],
+      'lastName' => $_POST['prenom_pere'],
+      'adresse' => $_POST['adresse_pere'],
+      'date_naissance' => $_POST['date_naissance_pere'],
+      'lieu_naissance' => $_POST['lieu_naissance_pere'],
+      'profession' => $_POST['profession_pere'],
+      'nationalite' => $_POST['nationalite_pere'],
+      'contact' => $_POST['contact_pere'],
+    ];
+   /* $data = [
         'nom_mere' => $_POST['nom_mere'],
         'post_nom' => $_POST['post_nom'],
-        'nom_enfant' => $_POST['nom_enfant'],
+        
         'date_enregistrement' => date('Y-m-d'),
         'adresse_mere' => $_POST['adresse_mere'],
         'numero_enregistrement' => uniqid('CERT-'),
         'lieu_naissance' => $_POST['lieu_naissance'],
         'date_naissance' => $_POST['date_naissance'],
-        'profession_mere' => $_POST['profession_mere'],
         'heure_naissance' => $_POST['heure_naissance'],
         'nationalite_mere' => $_POST['nationalite_mere'],
+    ];*/
+    
+    $dataHopital = [
+      'nom' => 'hopital de n\'djili',
+      'adresse' => 'kinshasa', 
+      'ville' => 'kishasa'
     ];
 
-    if (enregistrer_certificat($data)) {
-        header("Location: index.php");
+    $dataMedecin = [
+      'nom' => $_POST['nom_doc'],
+      'firstName' => $_POST['postnom_doc'],
+      'specialisation' => $_POST['specialite'],
+      'contact' => $_POST['contact_doc']
+    ];
+    $dataNaissance = [
+      'dateNaissance' => $_POST['date_naissance_enfant'],
+      'heure' => $_POST['heure_naissance_enfant'],
+      'lieu_naissance' => $_POST['lieu_naissance_enfant']
+    ];
+
+    $dataEnfant = [
+      'nom' => $_POST['nom_enfant'],
+      'firstName' => $_POST['post_nom'],
+      'lastName' => $_POST['pre_nom'],
+      'sexe' => $_POST['sexe'],
+      'vaccin_bcg' => true,
+      'vaccin_polio' => true,
+      'poids' => $_POST['poids'],
+    ];
+
+    $dataActNaissance = [
+      'numero_acte' => uniqid('CERT-'),
+    ];
+
+    if (enregistrementRequest($dataMere,  $dataPere, $dataHopital,$dataMedecin,$dataNaissance,$dataEnfant,$dataActNaissance  /*$dataMedecin  $dataNaissance,  $dataEnfant,  $dataActNaissance*/)) {
+        //header("Location: index.php");
+        echo "Les données ont été enregistrées avec succès.";
         exit();
     } else {
         $message = "Erreur lors de l'enregistrement.";
@@ -57,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
   <div class="container-scroller">
     <!-- partial:../../partials/_navbar.html -->
-    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+    <!--<nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
           <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../images/logo.svg" alt="logo"/></a>
           <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../images/logo-mini.svg" alt="logo"/></a>
@@ -204,7 +255,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </button>
         </div>
       </nav>
-    <!-- partial -->
+    partial -->
     <div class="container-fluid page-body-wrapper">
       <!-- partial:../../partials/_settings-panel.html -->
       <div class="theme-setting-wrapper">
@@ -235,7 +286,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <!-- partial -->
 
       <!-- partial:../../partials/sidebar -->
-      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+      <<nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
             <div class="nav-search mt-2">
@@ -339,27 +390,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       </div>
                       <div class="col-md-6">
                         <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Date de Naissance Enfant</label>
+                          <div class="col-sm-9">
+                            <input type="date" name="date_naissance_enfant" id="date_naissance_enfant" class="form-control" required />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Heure de naissance</label>
+                          <div class="col-sm-9">
+                            <input type="time" name="heure_naissance_enfant" id="heure_naissance_enfant" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Lieu de naissance enfant</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="lieu_naissance_enfant" id="lieu_naissance_enfant" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Nom de Mere</label>
                           <div class="col-sm-9">
                             <input type="text" name="nom_mere" id="nom_mere" class="form-control" required/>
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="row">
                       <div class="col-md-6">
                         <div class="form-group row">
-                          <label class="col-sm-3 col-form-label" for="date_naissance">Heure de Naissance</label>
+                          <label class="col-sm-3 col-form-label">Nom du Pere</label>
                           <div class="col-sm-9">
-                            <input type="time" name="heure_naissance" id="heure_naissance" class="form-control" required>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group row">
-                          <label class="col-sm-3 col-form-label">Date de Naissance</label>
-                          <div class="col-sm-9">
-                            <input type="date" name="date_naissance" id="date_naissance" class="form-control" required />
+                            <input type="text" name="nom_pere" id="nom_pere" class="form-control" required />
                           </div>
                         </div>
                       </div>
@@ -367,15 +437,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group row">
-                          <label class="col-sm-3 col-form-label">Lieu de Naissance</label>
+                          <label class="col-sm-3 col-form-label">Postnom de Mere</label>
                           <div class="col-sm-9">
-                            <input type="text" name="lieu_naissance" id="lieu_naissance" class="form-control" required/>
+                            <input type="text" name="postnom_mere" id="nom_mere" class="form-control" required/>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group row">
-                          <label class="col-sm-3 col-form-label">Adresse Complet</label>
+                          <label class="col-sm-3 col-form-label">Postnom du Pere</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="postnom_pere" id="nom_pere" class="form-control" required />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Pre-nom de Mere</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="prenom_mere" id="nom_mere" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Pre-nom du Pere</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="prenom_pere" id="nom_pere" class="form-control" required />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Adresse de pere</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="adresse_pere" id="adresse_pere" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Adresse de mere</label>
                           <div class="col-sm-9">
                             <input type="text" name="adresse_mere" id="adresse_mere" class="form-control" required/>
                           </div>
@@ -385,15 +492,69 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group row">
-                          <label class="col-sm-3 col-form-label">Profession de la Mère</label>
+                          <label class="col-sm-3 col-form-label">Date de Naissance du pere</label>
                           <div class="col-sm-9">
-                            <input type="text" name="profession_mere" id="profession_mere" class="form-control" required/>
+                            <input type="date" name="date_naissance_pere" id="date_naissance_pere" class="form-control" required/>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group row">
-                          <label class="col-sm-3 col-form-label">Nationalité de la Mère</label>
+                          <label class="col-sm-3 col-form-label">Date de Naissance de la mere</label>
+                          <div class="col-sm-9">
+                            <input type="date" name="date_naissance_mere" id="date_naissance_mere" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Lieu de Naissance du pere</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="lieu_naissance_pere" id="lieu_naissance_pere" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Lieu de Naissance de la mere</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="lieu_naissance_mere" id="lieu_naissance_mere" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Profession du Père</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="profession_pere" id="profession_pere" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Profession de Mère</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="profession_mere" id="profession_mere" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Nationalité du Père</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="nationalite_pere" id="nationalite_pere" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Nationalité de Mère</label>
                           <div class="col-sm-9">
                             <input type="text" name="nationalite_mere" id="nationalite_mere" class="form-control" required/>
                           </div>
@@ -401,7 +562,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                       </div>
                     </div>
                     <div class="row">
-                    <div class="col-md-6">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Contact du Père</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="contact_pere" id="contact_pere" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Contact de Mère</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="contact_mere" id="contact_mere" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Sexe</label>
                           <div class="col-sm-9">
@@ -417,6 +596,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                           <label class="col-sm-3 col-form-label">Poid</label>
                           <div class="col-sm-9">
                             <input type="text" name="poids" id="poids" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Nom de medecin</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="nom_doc" id="nom_doc" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Postnom de medecin</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="postnom_doc" id="postnom_doc" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Spécialité de medecin</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="specialite" id="specialite" class="form-control" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Contact de medecin</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="contact_doc" id="contact_doc" class="form-control" required/>
                           </div>
                         </div>
                       </div>

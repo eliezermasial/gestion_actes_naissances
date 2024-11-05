@@ -32,7 +32,6 @@ function login_user($get_request) {
 
 }
 
-
 /**
  * Enregistre un certificat de naissance dans la base de données.
  *
@@ -60,7 +59,6 @@ function enregistrer_certificat($data) {
     return $stmt->execute($data); 
 }
 
-
 /**
  * Récupère tous les certificats de naissance de la base de données.
  *
@@ -75,7 +73,6 @@ function get_certificats() {
     // Retourne tous les enregistrements sous forme de tableau associatif
     return $stmt->fetchAll(PDO::FETCH_ASSOC); 
 }
-
 
 /**
  * Récupère un certificat de naissance spécifique par son ID.
@@ -95,7 +92,6 @@ function get_certificat($id) {
     // Récupère le certificat trouvé sous forme de tableau associatif, ou null si aucun certificat trouvé
     return $stmt->fetch(PDO::FETCH_ASSOC); 
 }
-
 
 /**
  * Suppression de certificats de naissance par Id.
@@ -121,7 +117,6 @@ function delete_certificat($id, &$message) { // Ajout de & pour passer $message 
     }
 }
 
-
 /**
  * Récupère le certificat de naissance correspondant à l'Id de la base de données.
  * 
@@ -143,6 +138,5 @@ function post_certificat($id) {
     // Récupération du certificat correspondant sous forme de tableau associatif
     return $stmt->fetch(); // Retourne false si aucun certificat n'est trouvé
 }
-
 
 ?>

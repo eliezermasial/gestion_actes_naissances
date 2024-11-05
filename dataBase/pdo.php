@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 
 function db_connect() {
     $host = 'localhost';
-    $dbname = 'gestion_certificats';
+    $dbname = 'gestion_acte_naissance';
     $username = 'root';
     $password = '';
 
@@ -19,5 +19,3 @@ function db_connect() {
 }
 
 ?>
-
-
