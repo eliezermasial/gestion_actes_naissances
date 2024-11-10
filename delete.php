@@ -3,15 +3,17 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'controller/ControllerCertificat.php';
+//require_once 'controller/ControllerCertificat.php';
+require_once 'controller/controller.php';
 
 if (isset($_GET['id'])) {
     $id = intval($_GET['id']);
-    
-    delete_certificat($id,$message);
+    deleteEnfant($id,$message);
+
 } else {
     $message = "ID du certificat manquant.";
 }
+
 ?>
 
 <!DOCTYPE html>

@@ -1,13 +1,21 @@
 <?php
+require_once 'controller/controller.php';
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'controller/controller.php';
+// Récupérer les données du formulaire
+$dataName = !isset($_POST['nom_enfant']) ? $_POST['nom_enfant'] : '';
+$dataBirthday = isset($_POST['date_naissance_enfant']) ? $_POST['date_naissance_enfant'] : '';
+// Appeler la fonction avec les paramètres dans le bon ordre
+$enfants = searchEnfant($dataName, $dataBirthday);
+var_dump($enfants);
 
-$enfants = getAllEnfants();
 
-//$url = $_SERVER['REQUEST_URI'];
+
+
+//$url = $_SERVER['REQUEST_URI']; recuperation des enfants
 ?>
 
 <!DOCTYPE html>
@@ -245,12 +253,12 @@ $enfants = getAllEnfants();
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
               <i class="typcn typcn-th-small-outline menu-icon"></i>
-              <span class="menu-title">Search</span>
+              <span class="menu-title">Tables</span>
               <i class="menu-arrow"></i>
             </a>
             <div class="collapse" id="tables">
               <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="./searchEnfant.php">Search Enfant</a></li>
+                <li class="nav-item"> <a class="nav-link" href="../../pages/tables/basic-table.html">Basic table</a></li>
               </ul>
             </div>
           </li>
@@ -278,48 +286,35 @@ $enfants = getAllEnfants();
             <div class="col-lg-12 stretch-card">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">Liste des Certificats de Naissance</h4>
-                  <div class="table-responsive pt-3">
-                    <table class="table table-bordered">
-                      <thead>
-                        <tr>
-                          <th>#</th>
-                          <th>Nom-enfant</th>
-                          <th>Post-Nom</th>
-                          <th>Pre-Nom</th>
-                          <th>Dt. Naiss</th>
-                          <th>L. Naiss</th>
-                          <th>Sexe</th>
-                          <th>Nom-Mère</th>
-                          <th>Poid</th>
-                          <th>Dt. enreg</th>
-                          <th>N° d'enreg</th>
-                          <th>Acte</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                      <?php foreach ($enfants as $enfant): ?>
-                        <tr class="table-info">
-                            <td><?= $enfant['enfant_id'] ?></td>
-                            <td><?= htmlspecialchars($enfant['nom_enfant']) ?></td>
-                            <td><?= htmlspecialchars($enfant['postnom_enfant']) ?></td>
-                            <td><?= htmlspecialchars($enfant['prenom_enfant']) ?></td>
-                            <td><?= htmlspecialchars($enfant['date_naissance_enfant']) ?></td>
-                            <td><?= htmlspecialchars($enfant['lieu_naissance_enfant']) ?></td>
-                            <td><?= htmlspecialchars($enfant['sexe_enfant']) ?></td>
-                            <td><?= htmlspecialchars($enfant['nom_mere']) ?></td>
-                            <td><?= htmlspecialchars($enfant['poids_enfant']) ?> Kg</td>
-                            <td><?= htmlspecialchars($enfant['date_enregistrement']) ?></td>
-                            <td><?= htmlspecialchars($enfant['numero_acteNaissance'])?></td>
-                            <td class="d-fbloc">
-                                <a href="edit.php?id=<?= htmlspecialchars($enfant['enfant_id']) ?>" class="btn  btn-info p-1">Edit</a>
-                                <a href="delete.php?id=<?= htmlspecialchars($enfant['enfant_id']) ?>" class="btn btn-danger p-1 mt-1 mb-1" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce certificat ?');">delete</a>
-                                <a href="postCertificat.php?id=<?= htmlspecialchars($enfant['enfant_id']) ?>" class="btn btn-primary p-1">certificat</a>
-                            </td>
-                        </tr>
-                      <?php endforeach; ?>
-                      </tbody>
-                    </table>
+                  <h4 class="card-title">
+                        Liste des Certificats de Naissance
+                  </h4>
+                  <div class="table pt-3">
+                    <form action="searchEnfant.php" method="post">
+                    <div class="row">
+                      <div class="col-md-5">
+                        <div class="col-sm-9 form-group">
+                            <input type="text" name="nom_enfant" id="nom_enfant" class="form-control" required placeholder="search by name enfant" />
+                        </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="col-sm-9 form-group">
+                            <button type="submit" class="btn btn-primary ">Submit</button>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="col-sm-9 form-group">
+                            <input type="date" name="date_naissance_enfant" id="date_naissance_enfant" class="form-control" placeholder="search by birthday" />
+                        </div>
+                      </div>
+                    </div>
+                    </form>
+                    <div>
+                        
+
+                            <p><?= var_dump($enfants['nom_enfant']) ?></p>
+                        
+                    </div>
                   </div>
                 </div>
               </div>

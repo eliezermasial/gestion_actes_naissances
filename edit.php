@@ -3,51 +3,83 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'controller/ControllerCertificat.php';
+//require_once 'controller/ControllerCertificat.php';
+require_once 'controller/controller.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
-    $data = [
-        'id' => $_POST['id'],
-        'nom_enfant' => $_POST['nom_enfant'],
-        'date_naissance' => $_POST['date_naissance'],
-        'heure_naissance' => $_POST['heure_naissance'],
-        'lieu_naissance' => $_POST['lieu_naissance'],
-        'sexe' => $_POST['sexe'],
-        'nom_mere' => $_POST['nom_mere'],
-        'nationalite_mere' => $_POST['nationalite_mere'],
-        'adresse_mere' => $_POST['adresse_mere'],
-        'profession_mere' => $_POST['profession_mere']
-    ];
 
-    $pdo = db_connect();
+$enfant = getEnfantDetails($_GET['id']) ;
 
-    $stmt = $pdo->prepare("
-        UPDATE certificats_naissance SET
-            nom_enfant = :nom_enfant,
-            date_naissance = :date_naissance,
-            heure_naissance = :heure_naissance,
-            lieu_naissance = :lieu_naissance,
-            sexe = :sexe,
-            nom_mere = :nom_mere,
-            nationalite_mere = :nationalite_mere,
-            adresse_mere = :adresse_mere,
-            profession_mere = :profession_mere
-        WHERE id = :id
-    ");
+$id = $_POST['id'];
+//var_dump($id);
 
-    if ($stmt->execute($data)) {
-        header("Location: listCertificat.php");
-        exit();
-    } else {
-        $message = "Erreur lors de la modification.";
-    }
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id']))
+{
+  $dataEnfant = [
+    'mere_id' => '',
+    'pere_id' => '',
+    'medecin_id' => '',
+    'naissance_id' => '',
+    'sexe' => $_POST['sexe'],
+    'nom' => $_POST['nom_enfant'],
+    'poids' => $_POST['poids_enfant'],
+    'lastName' => $_POST['prenom_enfant'],
+    'firstName' => $_POST['postnom_enfant'],
+  ];
+  
+  $dataMere = [
+    'nom' => $_POST['nom_mere'],
+    'lastName' => $_POST['prenom_mere'],
+    'adresse' => $_POST['adresse_mere'],//123 Rue Exemple
+    'contact' => $_POST['contact_mere'],
+    'firstName' => $_POST['postnom_mere'],
+    'profession' => $_POST['profession_mere'],//Infirmière
+    'nationalite' => $_POST['nationalite_mere'],
+    'date_naissance' => $_POST['date_naissance_mere'],//1980-01-01
+    'lieu_naissance' => $_POST['lieu_naissance_mere'],
+  ];
+  
+  $dataPere = [
+    'nom' => $_POST['nom_pere'],
+    'lastName' => $_POST['prenom_pere'],
+    'adresse' => $_POST['adresse_pere'],
+    'contact' => $_POST['contact_pere'],
+    'firstName' => $_POST['postnom_pere'],
+    'profession' => $_POST['profession_pere'],
+    'nationalite' => $_POST['nationalite_pere'],
+    'date_naissance' => $_POST['date_naissance_pere'],
+    'lieu_naissance' => $_POST['lieu_naissance_pere']
+  ];
+  
+  $dataNaissance = [
+    'heure' => $_POST['heure_naissance_enfant'],
+    'dateNaissance' => $_POST['data_naissance_enfant'],
+    'lieu_naissance' => $_POST['lieu_naissance_enfant']
+  ];
+
+ $dataMedecin = [
+    'nom' => $_POST['nom_medecin'],
+    'contact' => $_POST['contact_medecin'],
+    'specialisation' => $_POST['specialisation'],
+    'postnom_medecin' => $_POST['postnom_medecin']
+  ];
+
+$enfant = updateEnfant($id, $dataEnfant, $dataMere, $dataPere, $dataNaissance, $dataMedecin);
+
 }
 
 if (isset($_GET['id'])) {
-    $certificat = get_certificat($_GET['id']);
+  $enfant = getEnfantDetails($_GET['id']) ;
+} else {
+  $message = "ID du certificat manquant.";
+}
+
+
+if (isset($_GET['id'])) {
+    $certificat = getEnfantDetails($_GET['id']);
 } else {
     $message = "ID du certificat manquant.";
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -57,7 +89,7 @@ if (isset($_GET['id'])) {
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <title>Modifier Enfant <?= $certificat['nom_enfant'] ?></title>
+  <title> Modifier les informations de <?= $enfant['nom_enfant'] ?></title>
   <!-- base:css -->
   <link rel="stylesheet" href="../../vendors/typicons.font/font/typicons.css">
   <link rel="stylesheet" href="../../vendors/css/vendor.bundle.base.css">
@@ -75,7 +107,7 @@ if (isset($_GET['id'])) {
 <body>
   <div class="container-scroller">
     <!-- partial:../../partials/_navbar.html -->
-    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+    <!--<nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
           <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../images/logo.svg" alt="logo"/></a>
           <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../images/logo-mini.svg" alt="logo"/></a>
@@ -222,7 +254,7 @@ if (isset($_GET['id'])) {
           </button>
         </div>
       </nav>
-    <!-- partial -->
+    partial -->
     <div class="container-fluid page-body-wrapper">
       <!-- partial:../../partials/_settings-panel.html -->
       <div class="theme-setting-wrapper">
@@ -253,7 +285,7 @@ if (isset($_GET['id'])) {
       <!-- partial -->
 
       <!-- partial:../../partials/sidebar -->
-      <nav class="sidebar sidebar-offcanvas" id="sidebar">
+      <<nav class="sidebar sidebar-offcanvas" id="sidebar">
         <ul class="nav">
           <li class="nav-item">
             <div class="nav-search mt-2">
@@ -285,25 +317,6 @@ if (isset($_GET['id'])) {
                 <li class="nav-item"><a class="nav-link" href="enregistrer.php">Enregistrer </a></li>
               </ul>
             </div>
-            <?php if ($_SERVER['REQUEST_URI']): ?>
-            <div class="collapse" id="form-elements">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"><a class="nav-link" href="enregistrer.php">Modifier </a></li>
-              </ul>
-            </div>
-            <?php endif; ?>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#charts" aria-expanded="false" aria-controls="charts">
-              <i class="typcn typcn-chart-pie-outline menu-icon"></i>
-              <span class="menu-title">Charts</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="charts">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../../pages/charts/chartjs.html">ChartJs</a></li>
-              </ul>
-            </div>
           </li>
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#tables" aria-expanded="false" aria-controls="tables">
@@ -317,18 +330,7 @@ if (isset($_GET['id'])) {
               </ul>
             </div>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="collapse" href="#icons" aria-expanded="false" aria-controls="icons">
-              <i class="typcn typcn-compass menu-icon"></i>
-              <span class="menu-title">Icons</span>
-              <i class="menu-arrow"></i>
-            </a>
-            <div class="collapse" id="icons">
-              <ul class="nav flex-column sub-menu">
-                <li class="nav-item"> <a class="nav-link" href="../../pages/icons/mdi.html">Mdi icons</a></li>
-              </ul>
-            </div>
-          </li>
+          
           <li class="nav-item">
             <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
               <i class="typcn typcn-user-add-outline menu-icon"></i>
@@ -348,12 +350,12 @@ if (isset($_GET['id'])) {
       
       <!-- partial -->
       <div class="main-panel">        
-        <div class="content-wrapper">
+      <div class="content-wrapper">
           <div class="row">
             <div class="col-12 grid-margin">
               <div class="card">
                 <div class="card-body">
-                  <h4 class="card-title">Modifier Enfant <?= $certificat['nom_enfant'] ?></h4>
+                  <h4 class="card-title">Enregistrer un Enfant</h4>
                   <?php if (isset($message)): ?>
                     <div class="alert alert-danger"><?= $message ?></div>
                   <?php endif; ?>
@@ -363,15 +365,15 @@ if (isset($_GET['id'])) {
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Nom enfant</label>
                           <div class="col-sm-9">
-                            <input type="text" name="nom_enfant" id="nom_enfant" class="form-control" value="<?= htmlspecialchars($certificat['nom_enfant']) ?>" required/>
+                            <input type="text" name="nom_enfant" id="nom_enfant" class="form-control" value="<?= $enfant['nom_enfant'] ?>" required/>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group row">
-                          <label class="col-sm-3 col-form-label">Post Nom</label>
+                          <label class="col-sm-3 col-form-label">Post-nom</label>
                           <div class="col-sm-9">
-                            <input type="text" name="post_nom" id="post_nom" class="form-control" value="<?= htmlspecialchars($certificat['post_nom']) ?>" required/>
+                            <input type="text" name="postnom_enfant" id="postnom_enfant" class="form-control" value="<?= $enfant['postnom_enfant'] ?>" required/>
                           </div>
                         </div>
                       </div>
@@ -381,34 +383,51 @@ if (isset($_GET['id'])) {
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Pre-nom</label>
                           <div class="col-sm-9">
-                            <input type="text" name="pre_nom" id="pre_nom" class="form-control" value="<?= htmlspecialchars($certificat['pre_nom']) ?>" required/>
+                            <input type="text" name="prenom_enfant" id="prenom_enfant" class="form-control" value="<?= $enfant['prenom_enfant'] ?>" required/>
                           </div>
                         </div>
                       </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Date de Naissance Enfant</label>
+                          <div class="col-sm-9">
+                            <input type="date" name="date_naissance_enfant" id="date_naissance_enfant" class="form-control" value="<?= $enfant['date_naissance_enfant'] ?>" required />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Heure de naissance</label>
+                          <div class="col-sm-9">
+                            <input type="time" name="heure_naissance_enfant" id="heure_naissance_enfant" class="form-control" value="<?= $enfant['heure_naissance_enfant'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Lieu de naissance enfant</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="lieu_naissance_enfant" id="lieu_naissance_enfant" class="form-control" value="<?= $enfant['lieu_naissance_enfant'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
                       <div class="col-md-6">
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Nom de Mere</label>
                           <div class="col-sm-9">
-                            <input type="text" name="nom_mere" id="nom_mere" class="form-control" value="<?= htmlspecialchars($certificat['nom_mere']) ?>" required/>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group row">
-                          <label class="col-sm-3 col-form-label" for="date_naissance">Heure de Naissance</label>
-                          <div class="col-sm-9">
-                            <input type="time" name="heure_naissance" id="heure_naissance" class="form-control" value="<?= htmlspecialchars($certificat['heure_naissance']) ?>" required>
+                            <input type="text" name="nom_mere" id="nom_mere" class="form-control" value="<?= $enfant['nom_mere'] ?>" required/>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group row">
-                          <label class="col-sm-3 col-form-label">Date de Naissance</label>
+                          <label class="col-sm-3 col-form-label">Nom du Pere</label>
                           <div class="col-sm-9">
-                            <input type="date" name="date_naissance" id="date_naissance" class="form-control" value="<?= htmlspecialchars($certificat['date_naissance']) ?>" required />
+                            <input type="text" name="nom_pere" id="nom_pere" class="form-control" value="<?= $enfant['nom_pere'] ?>" required />
                           </div>
                         </div>
                       </div>
@@ -416,17 +435,17 @@ if (isset($_GET['id'])) {
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group row">
-                          <label class="col-sm-3 col-form-label">Lieu de Naissance</label>
+                          <label class="col-sm-3 col-form-label">Postnom de Mere</label>
                           <div class="col-sm-9">
-                            <input type="text" name="lieu_naissance" id="lieu_naissance" class="form-control" value="<?= htmlspecialchars($certificat['lieu_naissance']) ?>" required/>
+                            <input type="text" name="postnom_mere" id="postnom_mere" class="form-control" value="<?= $enfant['postnom_mere'] ?>" required/>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group row">
-                          <label class="col-sm-3 col-form-label">Adresse Complet</label>
+                          <label class="col-sm-3 col-form-label">Postnom du Pere</label>
                           <div class="col-sm-9">
-                            <input type="text" name="adresse_mere" id="adresse_mere" class="form-control" value="<?= htmlspecialchars($certificat['adresse_mere']) ?>" required/>
+                            <input type="text" name="postnom_pere" id="postnom_pere" class="form-control" value="<?= $enfant['postnom_pere'] ?>" required />
                           </div>
                         </div>
                       </div>
@@ -434,23 +453,131 @@ if (isset($_GET['id'])) {
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group row">
-                          <label class="col-sm-3 col-form-label">Profession de la Mère</label>
+                          <label class="col-sm-3 col-form-label">Pre-nom de Mere</label>
                           <div class="col-sm-9">
-                            <input type="text" name="profession_mere" id="profession_mere" class="form-control" value="<?= htmlspecialchars($certificat['profession_mere']) ?>" required/>
+                            <input type="text" name="prenom_mere" id="prenom_mere" class="form-control" value="<?= $enfant['prenom_pere'] ?>" required/>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group row">
-                          <label class="col-sm-3 col-form-label">Nationalité de la Mère</label>
+                          <label class="col-sm-3 col-form-label">Pre-nom du Pere</label>
                           <div class="col-sm-9">
-                            <input type="text" name="nationalite_mere" id="nationalite_mere" class="form-control" value="<?= htmlspecialchars($certificat['nationalite_mere']) ?>" required/>
+                            <input type="text" name="prenom_pere" id="prenom_pere" class="form-control" value="<?= $enfant['prenom_mere'] ?>" required />
                           </div>
                         </div>
                       </div>
                     </div>
                     <div class="row">
-                    <div class="col-md-6">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Adresse de pere</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="adresse_pere" id="adresse_pere" class="form-control" value="<?= $enfant['adresse_pere'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Adresse de mere</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="adresse_mere" id="adresse_mere" class="form-control" value="<?= $enfant['adresse_mere']?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Date de Naissance du pere</label>
+                          <div class="col-sm-9">
+                            <input type="date" name="date_naissance_pere" id="date_naissance_pere" class="form-control" value="<?= $enfant['date_naissance_pere'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Date de Naissance de la mere</label>
+                          <div class="col-sm-9">
+                            <input type="date" name="date_naissance_mere" id="date_naissance_mere" class="form-control" value="<?= $enfant['date_naissance_mere'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Lieu de Naissance du pere</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="lieu_naissance_pere" id="lieu_naissance_pere" class="form-control" value="<?= $enfant['lieu_naissance_pere'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Lieu de Naissance de la mere</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="lieu_naissance_mere" id="lieu_naissance_mere" class="form-control" value="<?= $enfant['lieu_naissance_mere'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Profession du Père</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="profession_pere" id="profession_pere" class="form-control" value="<?= $enfant['profession_pere'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Profession de Mère</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="profession_mere" id="profession_mere" class="form-control" value="<?= $enfant['profession_mere'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Nationalité du Père</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="nationalite_pere" id="nationalite_pere" class="form-control" value="<?= $enfant['nationalite_pere'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Nationalité de Mère</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="nationalite_mere" id="nationalite_mere" class="form-control" value="<?= $enfant['nationalite_mere'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Contact du Père</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="contact_pere" id="contact_pere" class="form-control" value="<?= $enfant['contact_pere'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Contact de Mère</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="contact_mere" id="contact_mere" class="form-control" value="<?= $enfant['contact_mere'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Sexe</label>
                           <div class="col-sm-9">
@@ -465,14 +592,44 @@ if (isset($_GET['id'])) {
                         <div class="form-group row">
                           <label class="col-sm-3 col-form-label">Poid</label>
                           <div class="col-sm-9">
-                            <input type="text" name="poids" id="poids" class="form-control" value="<?= htmlspecialchars($certificat['poids']) ?>" required/>
+                            <input type="text" name="poids_enfant" id="poids_enfant" class="form-control" value="<?= $enfant['poids_enfant'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Nom de medecin</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="nom_medecin" id="nom_medecin" class="form-control" value="<?= $enfant['nom_medecin'] ?>" required/>
                           </div>
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Postnom de medecin</label>
                           <div class="col-sm-9">
-                            <input type="hidden" name="id" id="id" class="form-control" value="<?= htmlspecialchars($certificat['id']) ?>" required/>
+                            <input type="text" name="postnom_medecin" id="postnom_medecin" class="form-control" value="<?= $enfant['postnom_medecin'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Spécialité de medecin</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="specialisation" id="specialisation" class="form-control" value="<?= $enfant['specialisation'] ?>" required/>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group row">
+                          <label class="col-sm-3 col-form-label">Contact de medecin</label>
+                          <div class="col-sm-9">
+                            <input type="text" name="contact_medecin" id="contact_medecin" class="form-control" value="<?= $enfant['contact_medecin'] ?>" required/>
+                            <input type="text" name="id" id="id" value="<?= $enfant['enfant_id'] ?>">
                           </div>
                         </div>
                       </div>
@@ -483,7 +640,6 @@ if (isset($_GET['id'])) {
               </div>
             </div>
 
-       
           </div>
         </div>
         <!-- content-wrapper ends -->
