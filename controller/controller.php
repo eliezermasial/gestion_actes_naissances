@@ -165,6 +165,8 @@ function getEnfantDetails($enfantId) {
                 enfant.firstName AS postnom_enfant,
                 enfant.lastName AS prenom_enfant,
                 enfant.sexe AS sexe_enfant,
+                enfant.vaccin_bcg AS vaccin_bcg,
+                enfant.vaccin_polio AS vaccin_polio,
                 
                 mere.nom AS nom_mere,
                 mere.firstName AS postnom_mere,
@@ -193,7 +195,8 @@ function getEnfantDetails($enfantId) {
                 medecin.nom AS nom_medecin,
                 medecin.firstName AS postnom_medecin,
                 medecin.contact AS contact_medecin,
-                medecin.specialisation AS specialisation
+                medecin.specialisation AS specialisation,
+                acte_naissance.numero_acte AS numero_certificat
                 
             FROM 
                 enfant
@@ -205,6 +208,8 @@ function getEnfantDetails($enfantId) {
                 naissance ON enfant.naissance_id = naissance.id
             JOIN
                 medecin ON enfant.medecin_id = medecin.id
+            JOIN
+                acte_naissance ON enfant.acte_naissance_id = acte_naissance.id
             WHERE 
                 enfant.id = :enfant_id
         ");
@@ -321,9 +326,8 @@ function updateEnfant($id, $dataEnfant, $dataMere, $dataPere, $dataNaissance, $d
     }
 }
 
-function searchEnfant($nom, $dateNaissance) {
+function searchEnfant($nom) {
 
-    if (!empty($nom) || !empty($dataNaissance))
     {
         try {
             $pdo = db_connect();
@@ -345,7 +349,7 @@ function searchEnfant($nom, $dateNaissance) {
                 JOIN mere ON enfant.mere_id = mere.id
                 JOIN pere ON enfant.pere_id = pere.id
                 JOIN naissance ON enfant.naissance_id = naissance.id
-                WHERE 1 = 1
+                WHERE nom LIKE '%$nom%'
             ";
     
             // Préparer un tableau pour les paramètres de la requête
@@ -353,33 +357,27 @@ function searchEnfant($nom, $dateNaissance) {
     
             // Ajouter les conditions en fonction des critères de recherche
             if (!empty($nom)) {
-                $sql .= " AND (enfant.nom LIKE :nom OR enfant.firstName LIKE :nom OR enfant.lastName LIKE :nom)";
-                $params[':nom'] = '%' . $nom . '%';
+                $sql .= " AND enfant.nom = $nom";
+                $params[':nom'] = $nom ;
             }
-    
-            if (!empty($dateNaissance)) {
-                $sql .= " AND naissance.dateNaissance = :dateNaissance";
-                $params[':dateNaissance'] = $dateNaissance;
-            }
-    
+            
             // Préparer et exécuter la requête
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
     
             // Récupérer les résultats sous forme de tableau associatif
             $enfants = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
+            
+            //var_dump($enfants);
             return $enfants;
+
     
         } catch (Exception $e) {
             echo "Erreur lors de la recherche de l'enfant : " . $e->getMessage();
             return false;
         }
     }
-    else {
 
-        //header("Location: searchEnfant.php");
-    }
 }
 
 

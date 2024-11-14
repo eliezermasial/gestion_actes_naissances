@@ -28,19 +28,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       'nationalite' => $_POST['nationalite_pere'],
       'contact' => $_POST['contact_pere'],
     ];
-   /* $data = [
-        'nom_mere' => $_POST['nom_mere'],
-        'post_nom' => $_POST['post_nom'],
-        
-        'date_enregistrement' => date('Y-m-d'),
-        'adresse_mere' => $_POST['adresse_mere'],
-        'numero_enregistrement' => uniqid('CERT-'),
-        'lieu_naissance' => $_POST['lieu_naissance'],
-        'date_naissance' => $_POST['date_naissance'],
-        'heure_naissance' => $_POST['heure_naissance'],
-        'nationalite_mere' => $_POST['nationalite_mere'],
-    ];*/
-    
     $dataHopital = [
       'nom' => 'hopital de n\'djili',
       'adresse' => 'kinshasa', 
@@ -73,9 +60,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       'numero_acte' => uniqid('CERT-'),
     ];
 
-    if (enregistrementRequest($dataMere,  $dataPere, $dataHopital,$dataMedecin,$dataNaissance,$dataEnfant,$dataActNaissance  /*$dataMedecin  $dataNaissance,  $dataEnfant,  $dataActNaissance*/)) {
-        //header("Location: index.php");
-        echo "Les données ont été enregistrées avec succès.";
+    if (enregistrementRequest($dataMere,  $dataPere, $dataHopital,$dataMedecin,$dataNaissance,$dataEnfant,$dataActNaissance))
+    {
+        header("Location: index.php");
         exit();
     } else {
         $message = "Erreur lors de l'enregistrement.";
@@ -108,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
   <div class="container-scroller">
     <!-- partial:../../partials/_navbar.html -->
-    <!--<nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
+    <nav class="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
         <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
           <a class="navbar-brand brand-logo" href="../../index.html"><img src="../../images/logo.svg" alt="logo"/></a>
           <a class="navbar-brand brand-logo-mini" href="../../index.html"><img src="../../images/logo-mini.svg" alt="logo"/></a>
@@ -255,7 +242,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </button>
         </div>
       </nav>
-    partial -->
+      
+    <!-- partial -->
     <div class="container-fluid page-body-wrapper">
       <!-- partial:../../partials/_settings-panel.html -->
       <div class="theme-setting-wrapper">
@@ -397,7 +385,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                       </div>
                     </div>
-
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group row">
@@ -470,7 +457,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </div>
                       </div>
                     </div>
-                  
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group row">

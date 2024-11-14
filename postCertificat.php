@@ -3,7 +3,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'controller/ControllerCertificat.php';
+require_once 'controller/Controller.php';
 
 if (!isset($_GET["id"]) || empty($_GET["id"])) {
     header("Location: index.php");
@@ -11,7 +11,8 @@ if (!isset($_GET["id"]) || empty($_GET["id"])) {
 }
 
 $id = $_GET["id"];
-$certificat = post_certificat($id);
+$enfant = getEnfantDetails($id);
+
 
 ?>
 
@@ -25,7 +26,7 @@ $certificat = post_certificat($id);
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <title>certificat de <?= $certificat['nom_enfant'] ?> </title>
+    <title>certificat de <?= $enfant['nom_enfant'] ?> </title>
 </head>
 <style>
     .certificat {
@@ -133,58 +134,49 @@ svg {
             </g>
         </svg>
         
-        <!-- Logo de l'hôpital à droite (pour un effet professionnel comme l'image d'exemple) -->
-        <div >
-            <svg  version="1.1" id="Capa_1" width="100px" viewBox="0 0 118.624 118.624">
-           <g>
-               <path d="M45.192,24.437v15.297H29.896c-1.546,0-2.802,1.256-2.802,2.802V65.17c0,1.554,1.256,2.802,2.802,2.802h15.296v15.294
-                   c0,1.537,1.256,2.802,2.802,2.802h22.638c1.537,0,2.802-1.265,2.802-2.802V67.972h15.288c1.549,0,2.802-1.248,2.802-2.802V42.535
-                   c0-1.546-1.253-2.802-2.802-2.802H73.434V24.437c0-1.545-1.265-2.801-2.802-2.801H47.994
-                   C46.448,21.636,45.192,22.891,45.192,24.437z M50.796,42.541V27.244H67.83v15.297c0,1.549,1.253,2.801,2.802,2.801H85.92V62.38
-                   H70.632c-1.549,0-2.802,1.253-2.802,2.802V80.47H50.796V65.182c0-1.549-1.256-2.802-2.802-2.802H32.698V45.342h15.296
-                   C49.546,45.342,50.796,44.095,50.796,42.541z M117.179,15.288C100.021,5.829,80.017,0.83,59.312,0.83
-                   c-20.708,0-40.72,5.005-57.865,14.458c-0.958,0.531-1.52,1.567-1.44,2.667c3.182,42.876,24.825,80.058,57.889,99.462
-                   c0.439,0.262,0.93,0.377,1.416,0.377c0.489,0,0.98-0.115,1.418-0.377c33.064-19.404,54.717-56.597,57.886-99.467
-                   C118.697,16.845,118.136,15.807,117.179,15.288z M59.312,111.726C29.094,93.309,9.199,58.992,5.74,19.329
-                   C21.705,10.876,40.178,6.422,59.312,6.422c19.122,0,37.602,4.454,53.574,12.906C109.434,58.992,89.543,93.301,59.312,111.726z"/>
-           </g>
-           </svg>
-        </div>
     
         <div class="header">
             <h6>REPUBLIQUE DEMOCRATIQUE DU CONGO</h6>
-            <h6>ENSEIGNEMENT SUPERIEUR ET UNIVERSITAIRE</h6>
-            <h6>ISTM / KIN</h6>
             <h6>HOPITAL DE N'DJILI</h6>
             <p>Q/7 Kinshasa - N'djili</p>
             <h5 class="fw-bold">CERTIFICAT DE NAISSANCE</h5>
         </div>
         
-        <div class="content ">
-            <p>Je soussigné : <?= $certificat['nom_enfant'] ?></p>
-            <p>Certifie que Madame : <?= $certificat['nom_mere'] ?></p>
-            <p>Epouse de Monsieur : <span class="input-line"></span></p>
-            <p>a accouché le : <?= $certificat['date_enregistrement'] ?></p>
-            <p>Sexe   :  <?= $certificat['sexe'] ?></p>
-            <!--<p>VA P.O : <span class="input-line "></span></p>-->
-            <p>Numero d'enregistreent : <?= $certificat['numero_enregistrement'] ?></p>
-            <p>Rendez-vous : </p>
+        <div class="content pt-3">
+            <p>Je soussigné : <span class="text-start"><?= $enfant['nom_enfant'].' '.$enfant['postnom_enfant'].' '.$enfant['prenom_enfant']  ?></span></p>
+            <p>Certifie que Madame : <?= $enfant['nom_mere'].' '.$enfant['postnom_mere'].' '.$enfant['prenom_mere'] ?></p>
+            <p>Epouse de Monsieur : <?= $enfant['nom_pere'].' '.$enfant['postnom_pere'].' '.$enfant['prenom_pere'] ?></p>
+            <p>a accouché le : <?= $enfant['date_naissance_enfant'].' '.'à'.' '.$enfant['heure_naissance_enfant'] ?></p>
+            <div class="d-flex justify-content-around">
+            <p>Sexe   :  <?= $enfant['sexe_enfant'] ?></p>
+            <p>Poids : <?= $enfant['poids_enfant'] ?></p>
+            </div>
+            <div class="d-flex justify-content-around mb-2">
+                <label>vaccin bcg:
+                    <input type="checkbox" <?= $enfant['vaccin_bcg'] == 1 ? 'checked' : '' ?> disabled>
+                </label>
+                <label>vaccin polio: 
+                    <input type="checkbox" <?= $enfant['vaccin_polio'] == 1 ? 'checked' : ''?> disabled>
+                </label>
+            </div>
+            <p>Rendez-vous : ..................</p>
+            <p>Numero d'enregistreent : <?= $enfant['numero_certificat'] ?></p>
         </div>
         
-        <div class="signature-section ">
-            <div class="left">
+        <div class="d-flex justify-content-between">
+            <div class="">
+            <p>Date et Signature : .....</p>
                 <p>Cachet :</p> <!-- Correction du mot "Cachet" pour l'alignement -->
             </div>
-            <div class="right text-end">
-                <p>Dr : .............................</p>
-                <p>CNO: 2780</p>
-                <p>Date et Signature</p>
+            <div class="text-end">
+                <p>Dr : <?= $enfant['nom_medecin'].' '.$enfant['postnom_medecin'] ?></p>
+                <p>Tel: <?= $enfant['contact_medecin'] ?></p>
             </div>
         </div>
     </div>
     
     <div class="content_telecharger mb-5">
-        <a class="btn" href="genpdf.php?id=<?= htmlspecialchars($certificat['id']) ?>">telecharcher</a>
+        <a class="btn" href="genpdf.php?id=<?= htmlspecialchars($enfant['enfant_id']) ?>">telecharcher</a>
     </div>
 </div>
 

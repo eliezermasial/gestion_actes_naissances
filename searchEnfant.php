@@ -1,22 +1,4 @@
-<?php
-require_once 'controller/controller.php';
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// Récupérer les données du formulaire
-$dataName = !isset($_POST['nom_enfant']) ? $_POST['nom_enfant'] : '';
-$dataBirthday = isset($_POST['date_naissance_enfant']) ? $_POST['date_naissance_enfant'] : '';
-// Appeler la fonction avec les paramètres dans le bon ordre
-$enfants = searchEnfant($dataName, $dataBirthday);
-var_dump($enfants);
-
-
-
-
-//$url = $_SERVER['REQUEST_URI']; recuperation des enfants
-?>
 
 <!DOCTYPE html>
 <html lang="en" translate="no">
@@ -290,7 +272,7 @@ var_dump($enfants);
                         Liste des Certificats de Naissance
                   </h4>
                   <div class="table pt-3">
-                    <form action="searchEnfant.php" method="post">
+                    <form action="text.php" method="post">
                     <div class="row">
                       <div class="col-md-5">
                         <div class="col-sm-9 form-group">
@@ -312,7 +294,7 @@ var_dump($enfants);
                     <div>
                         
 
-                            <p><?= var_dump($enfants['nom_enfant']) ?></p>
+                      
                         
                     </div>
                   </div>
