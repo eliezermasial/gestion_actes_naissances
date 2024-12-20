@@ -1,48 +1,75 @@
 <?php
+
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'dataBase/pdo.php';
+require_once __DIR__ . '/../dataBase/pdo.php';
 
-function enregistrementRequest(array $dataMere, array $dataPere, array $dataHopital, array $dataMedecin,$dataNaissance, $dataEnfant, $dataActNaissance /*array $dataMedecin array $dataNaissance, array $dataEnfant, array $dataActNaissance*/)
+/**
+ * Login connexion de l'utilisateur.
+ *
+ *@param int $get_request Les request de vérifications de l'utilisateur pour se connecter.
+ * @return array Un tableau associatif contenant les certificats de naissance par id.
+ */
+function login_user($get_request)
+{
+    $pdo = db_connect(); // Connexion à la base de données via une fonction db_connect()
+
+    $stmt = 'SELECT * FROM user'; // Préparation de la requête SQL pour récupérer tous les utilisateurs (à améliorer)
+    $select = $pdo->query($stmt); // Exécution de la requête SQL
+    $getUser = $select->fetch(); // Récupération du premier enregistrement de la table user
+
+    // Comparaison des informations fournies avec celles de la base de données
+    if ($get_request['name_user'] === $getUser['name_user'] &&
+        $get_request['password_user'] === $getUser['password_user']) {
+        // Si les informations sont correctes, redirection vers listCertificat.php
+        header('Location: ./public/listCertificat.php');
+    } else {
+        // Si les informations sont incorrectes, redirection vers index.php
+        header('Location: ../index.php');
+    }
+}
+
+function enregistrementRequest(array $dataMere,array $dataPere, array $dataHopital, array $dataMedecin,
+                array $dataNaissance, array $dataEnfant,array $dataActNaissance)
 {
     try {
         $pdo = db_connect();
         $pdo->beginTransaction();
-    
+
         // 1. Enregistrer la mère
         $stmt = $pdo->prepare(
-            "INSERT INTO mere (nom, firstName, lastName, adresse, date_naissance, lieu_naissance, profession, nationalite, contact)
-             VALUES (:nom, :firstName, :lastName, :adresse, :date_naissance, :lieu_naissance, :profession, :nationalite, :contact)"
+            'INSERT INTO mere (nom, firstName, lastName, adresse, date_naissance, lieu_naissance, profession, nationalite, contact)
+             VALUES (:nom, :firstName, :lastName, :adresse, :date_naissance, :lieu_naissance, :profession, :nationalite, :contact)'
         );
         $stmt->execute($dataMere);
         $id_mere = $pdo->lastInsertId();
-    
+
         // 2. Enregistrer le père
         $stmt = $pdo->prepare(
-            "INSERT INTO pere (nom, firstName, lastName, adresse, date_naissance, lieu_naissance, profession, nationalite, contact)
-             VALUES (:nom, :firstName, :lastName, :adresse, :date_naissance, :lieu_naissance, :profession, :nationalite, :contact)"
+            'INSERT INTO pere (nom, firstName, lastName, adresse, date_naissance, lieu_naissance, profession, nationalite, contact)
+             VALUES (:nom, :firstName, :lastName, :adresse, :date_naissance, :lieu_naissance, :profession, :nationalite, :contact)'
         );
         $stmt->execute($dataPere);
         $id_pere = $pdo->lastInsertId();
-    
+
         // 3. Enregistrer l'hôpital
         $stmt = $pdo->prepare(
-            "INSERT INTO hopital (nom, ville,adresse)
-             VALUES (:nom, :ville, :adresse)"
+            'INSERT INTO hopital (nom, ville,adresse)
+             VALUES (:nom, :ville, :adresse)'
         );
         $stmt->execute($dataHopital);
         $id_hopital = $pdo->lastInsertId();
-    
+
         // 4. Enregistrer le médecin
         $stmt = $pdo->prepare(
-            "INSERT INTO medecin (nom, firstName, specialisation, contact)
-             VALUES (:nom, :firstName, :specialisation, :contact)"
+            'INSERT INTO medecin (nom, firstName, specialisation, contact)
+             VALUES (:nom, :firstName, :specialisation, :contact)'
         );
         $stmt->execute($dataMedecin);
         $id_medecin = $pdo->lastInsertId();
-    
+
         // 5. Enregistrer la naissance
         $dataNaissance = array_merge($dataNaissance, [
             'mere_id' => $id_mere,
@@ -51,8 +78,8 @@ function enregistrementRequest(array $dataMere, array $dataPere, array $dataHopi
             'medecin_id' => $id_medecin
         ]);
         $stmt = $pdo->prepare(
-            "INSERT INTO naissance (dateNaissance, heure, lieu_naissance, mere_id, pere_id, hopital_id, medecin_id)
-             VALUES (:dateNaissance, :heure, :lieu_naissance, :mere_id, :pere_id, :hopital_id, :medecin_id)"
+            'INSERT INTO naissance (dateNaissance, heure, lieu_naissance, mere_id, pere_id, hopital_id, medecin_id)
+             VALUES (:dateNaissance, :heure, :lieu_naissance, :mere_id, :pere_id, :hopital_id, :medecin_id)'
         );
         $stmt->execute($dataNaissance);
         $id_naissance = $pdo->lastInsertId();
@@ -62,12 +89,12 @@ function enregistrementRequest(array $dataMere, array $dataPere, array $dataHopi
             'naissance_id' => $id_naissance
         ]);
         $stmt = $pdo->prepare(
-            "INSERT INTO acte_naissance (numero_acte, naissance_id)
-             VALUES (:numero_acte, :naissance_id)"
+            'INSERT INTO acte_naissance (numero_acte, naissance_id)
+             VALUES (:numero_acte, :naissance_id)'
         );
         $stmt->execute($dataActNaissance);
         $id_acteNaissance = $pdo->lastInsertId();
-    
+
         // 6. Enregistrer l'enfant et lier à la naissance
         $dataEnfant = array_merge($dataEnfant, [
             'mere_id' => $id_mere,
@@ -78,27 +105,28 @@ function enregistrementRequest(array $dataMere, array $dataPere, array $dataHopi
         ]);
 
         $stmt = $pdo->prepare(
-            "INSERT INTO enfant (nom, poids,firstName, lastName, mere_id, pere_id, 
+            'INSERT INTO enfant (nom, poids,firstName, lastName, mere_id, pere_id, 
                                         sexe,vaccin_bcg,vaccin_polio,naissance_id, acte_naissance_id, medecin_id)
              VALUES (:nom, :poids, :firstName, :lastName, :mere_id, :pere_id, :sexe,
-                                         :vaccin_bcg, :vaccin_polio, :naissance_id, :acte_naissance_id, :medecin_id)"
+                                         :vaccin_bcg, :vaccin_polio, :naissance_id, :acte_naissance_id, :medecin_id)'
         );
         $stmt->execute($dataEnfant);
-    
+
         // Valider la transaction
         return $pdo->commit();
-    
+
     } catch (Exception $e) {
         $pdo->rollBack();
         echo "Erreur lors de l'enregistrement des données : " . $e->getMessage();
     }
 }
 
-function getAllEnfants() {
+function getAllEnfants()
+{
     try {
         $pdo = db_connect();
 
-        $stmt = $pdo->prepare("
+        $stmt = $pdo->prepare('
             SELECT 
                 enfant.id AS enfant_id,
                 enfant.nom AS nom_enfant,
@@ -136,28 +164,28 @@ function getAllEnfants() {
                 acte_naissance ON enfant.acte_naissance_id = acte_naissance.id
             JOIN
                 medecin ON enfant.medecin_id = medecin.id
-        ");
+        ');
 
         // Exécute la requête
         $stmt->execute();
-        
+
         // Récupère tous les résultats sous forme de tableau associatif
         $enfants = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
         return $enfants;
 
     } catch (Exception $e) {
-        echo "Erreur : " . $e->getMessage();
+        echo 'Erreur : ' . $e->getMessage();
         return false;
     }
 }
 
-
-function getEnfantDetails($enfantId) {
+function getEnfantDetails($enfantId)
+{
     try {
         $pdo = db_connect();
 
-        $stmt = $pdo->prepare("
+        $stmt = $pdo->prepare('
             SELECT 
                 enfant.id AS enfant_id,
                 enfant.nom AS nom_enfant,
@@ -212,24 +240,24 @@ function getEnfantDetails($enfantId) {
                 acte_naissance ON enfant.acte_naissance_id = acte_naissance.id
             WHERE 
                 enfant.id = :enfant_id
-        ");
+        ');
 
         // Exécute la requête en passant l'ID de l'enfant
         $stmt->execute(['enfant_id' => $enfantId]);
-        
+
         // Récupère les résultats sous forme de tableau associatif
         $enfantDetails = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         return $enfantDetails;
 
     } catch (Exception $e) {
-        echo "Erreur : " . $e->getMessage();
+        echo 'Erreur : ' . $e->getMessage();
         return false;
     }
 }
 
-
-function updateEnfant($id, $dataEnfant, $dataMere, $dataPere, $dataNaissance, $dataMedecin) {
+function updateEnfant($id, $dataEnfant, $dataMere, $dataPere, $dataNaissance, $dataMedecin)
+{
     try {
         $pdo = db_connect();
 
@@ -237,7 +265,7 @@ function updateEnfant($id, $dataEnfant, $dataMere, $dataPere, $dataNaissance, $d
         $pdo->beginTransaction();
 
         // 1. Mise à jour de l'enfant
-        $sqlEnfant = "UPDATE enfant SET nom = :nom, firstName = :firstName, lastName = :lastName, poids= :poids ,sexe = :sexe WHERE id = :id";
+        $sqlEnfant = 'UPDATE enfant SET nom = :nom, firstName = :firstName, lastName = :lastName, poids= :poids ,sexe = :sexe WHERE id = :id';
         $stmtEnfant = $pdo->prepare($sqlEnfant);
         $stmtEnfant->execute([
             ':id' => $id,
@@ -250,7 +278,7 @@ function updateEnfant($id, $dataEnfant, $dataMere, $dataPere, $dataNaissance, $d
 
         // 2. Mise à jour de la mère
         if (!empty($dataMere)) {
-            $sqlMere = "UPDATE mere SET nom = :nom, firstName = :firstName, lastName = :lastName, adresse = :adresse, date_naissance = :date_naissance, lieu_naissance = :lieu_naissance, profession = :profession, nationalite = :nationalite, contact = :contact WHERE id = :mere_id";
+            $sqlMere = 'UPDATE mere SET nom = :nom, firstName = :firstName, lastName = :lastName, adresse = :adresse, date_naissance = :date_naissance, lieu_naissance = :lieu_naissance, profession = :profession, nationalite = :nationalite, contact = :contact WHERE id = :mere_id';
             $stmtMere = $pdo->prepare($sqlMere);
             $stmtMere->execute([
                 ':nom' => $dataMere['nom'],
@@ -268,7 +296,7 @@ function updateEnfant($id, $dataEnfant, $dataMere, $dataPere, $dataNaissance, $d
 
         // 3. Mise à jour du père
         if (!empty($dataPere)) {
-            $sqlPere = "UPDATE pere SET nom = :nom, firstName = :firstName, lastName = :lastName, adresse = :adresse, date_naissance = :date_naissance, lieu_naissance = :lieu_naissance, profession = :profession, nationalite = :nationalite, contact = :contact WHERE id = :pere_id";
+            $sqlPere = 'UPDATE pere SET nom = :nom, firstName = :firstName, lastName = :lastName, adresse = :adresse, date_naissance = :date_naissance, lieu_naissance = :lieu_naissance, profession = :profession, nationalite = :nationalite, contact = :contact WHERE id = :pere_id';
             $stmtPere = $pdo->prepare($sqlPere);
             $stmtPere->execute([
                 ':nom' => $dataPere['nom'],
@@ -286,7 +314,7 @@ function updateEnfant($id, $dataEnfant, $dataMere, $dataPere, $dataNaissance, $d
 
         // 4. Mise à jour des informations de naissance
         if (!empty($dataNaissance)) {
-            $sqlNaissance = "UPDATE naissance SET dateNaissance = :dateNaissance, heure = :heure, lieu_naissance = :lieu_naissance WHERE id = :naissance_id";
+            $sqlNaissance = 'UPDATE naissance SET dateNaissance = :dateNaissance, heure = :heure, lieu_naissance = :lieu_naissance WHERE id = :naissance_id';
             $stmtNaissance = $pdo->prepare($sqlNaissance);
             $stmtNaissance->execute([
                 ':heure' => $dataNaissance['heure'],
@@ -297,9 +325,8 @@ function updateEnfant($id, $dataEnfant, $dataMere, $dataPere, $dataNaissance, $d
         }
 
         // 5. Mise à jour des informations de medecin
-        if (empty($dataMedecin))
-        {
-            $sqlMedecin = "UPDATE medecin SET nom = :nom, firstName = :firstName, contact = :contact, specialisation = :specialisation WHERE id = :medecin_id";
+        if (empty($dataMedecin)) {
+            $sqlMedecin = 'UPDATE medecin SET nom = :nom, firstName = :firstName, contact = :contact, specialisation = :specialisation WHERE id = :medecin_id';
             $stmMedecin = $pdo->prepare($sqlMedecin);
             $stmMedecin->execute([
                 ':nom' => $dataMedecin['nom'],
@@ -311,27 +338,28 @@ function updateEnfant($id, $dataEnfant, $dataMere, $dataPere, $dataNaissance, $d
         }
 
         // Valider la transaction
-        
+
         if ($pdo->commit()) {
-            header("Location: listCertificat.php");
-        exit();
-         } else {
-            return "Erreur lors de la modification.";
+            header('Location: ../public/listCertificat.php');
+            exit();
+        } else {
+            return 'Erreur lors de la modification.';
         }
 
     } catch (Exception $e) {
         // Annuler la transaction en cas d'erreur
         $pdo->rollBack();
-        return "Erreur lors de la mise à jour des informations : " . $e->getMessage();
+        return 'Erreur lors de la mise à jour des informations : ' . $e->getMessage();
     }
 }
 
-function searchEnfant($nom) {
+function searchEnfant($nom)
+{
 
     {
         try {
             $pdo = db_connect();
-    
+
             // Définir la base de la requête SQL
             $sql = "
                 SELECT 
@@ -351,27 +379,27 @@ function searchEnfant($nom) {
                 JOIN naissance ON enfant.naissance_id = naissance.id
                 WHERE nom LIKE '%$nom%'
             ";
-    
+
             // Préparer un tableau pour les paramètres de la requête
             $params = [];
-    
+
             // Ajouter les conditions en fonction des critères de recherche
             if (!empty($nom)) {
                 $sql .= " AND enfant.nom = $nom";
                 $params[':nom'] = $nom ;
             }
-            
+
             // Préparer et exécuter la requête
             $stmt = $pdo->prepare($sql);
             $stmt->execute($params);
-    
+
             // Récupérer les résultats sous forme de tableau associatif
             $enfants = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
+
             //var_dump($enfants);
             return $enfants;
 
-    
+
         } catch (Exception $e) {
             echo "Erreur lors de la recherche de l'enfant : " . $e->getMessage();
             return false;
@@ -381,7 +409,8 @@ function searchEnfant($nom) {
 }
 
 
-function deleteEnfant($enfantId, &$message) {
+function deleteEnfant($enfantId, &$message)
+{
     try {
         $pdo = db_connect();
 
@@ -389,16 +418,16 @@ function deleteEnfant($enfantId, &$message) {
         $pdo->beginTransaction();
 
         // 1. Récupérer les IDs associés pour la mère, le père, la naissance et l'acte de naissance
-        $stmt = $pdo->prepare("
+        $stmt = $pdo->prepare('
             SELECT mere_id, pere_id, naissance_id, acte_naissance_id 
             FROM enfant 
             WHERE id = :enfant_id
-        ");
+        ');
         $stmt->execute([':enfant_id' => $enfantId]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$result) {
-            throw new Exception("Enfant non trouvé.");
+            throw new Exception('Enfant non trouvé.');
         }
 
         $mereId = $result['mere_id'];
@@ -407,34 +436,34 @@ function deleteEnfant($enfantId, &$message) {
         $acteNaissanceId = $result['acte_naissance_id'];
 
         // 2. Supprimer l'acte de naissance
-        $stmt = $pdo->prepare("DELETE FROM acte_naissance WHERE id = :acte_id");
+        $stmt = $pdo->prepare('DELETE FROM acte_naissance WHERE id = :acte_id');
         $stmt->execute([':acte_id' => $acteNaissanceId]);
 
         // 3. Supprimer la naissance
-        $stmt = $pdo->prepare("DELETE FROM naissance WHERE id = :naissance_id");
+        $stmt = $pdo->prepare('DELETE FROM naissance WHERE id = :naissance_id');
         $stmt->execute([':naissance_id' => $naissanceId]);
 
         // 4. Supprimer les informations de la mère et du père
-        $stmt = $pdo->prepare("DELETE FROM mere WHERE id = :mere_id");
+        $stmt = $pdo->prepare('DELETE FROM mere WHERE id = :mere_id');
         $stmt->execute([':mere_id' => $mereId]);
 
-        $stmt = $pdo->prepare("DELETE FROM pere WHERE id = :pere_id");
+        $stmt = $pdo->prepare('DELETE FROM pere WHERE id = :pere_id');
         $stmt->execute([':pere_id' => $pereId]);
 
         // 5. Supprimer l'enfant
-        $stmt = $pdo->prepare("DELETE FROM enfant WHERE id = :enfant_id");
+        $stmt = $pdo->prepare('DELETE FROM enfant WHERE id = :enfant_id');
         $stmt->execute([':enfant_id' => $enfantId]);
 
         // Valider la transaction
         if ($pdo->commit()) {
             // Si la suppression réussit, redirection vers la page d'accueil
-            header("Location: listCertificat.php");
+            header('Location: listCertificat.php');
             exit(); // Terminer l'exécution du script après la redirection
         } else {
             // Si la suppression échoue, on modifie le message d'erreur
-            $message = "Erreur lors de la suppression.";
+            $message = 'Erreur lors de la suppression.';
         }
-    
+
     } catch (Exception $e) {
         // Annuler la transaction en cas d'erreur
         $pdo->rollBack();
@@ -442,4 +471,7 @@ function deleteEnfant($enfantId, &$message) {
     }
 }
 
+//function archiverEnfants()
+
 ?>
+

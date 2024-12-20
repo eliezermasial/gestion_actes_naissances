@@ -3,15 +3,14 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'controller/ControllerCertificat.php';
-
+require './controller/controller.php';
 
 if (!empty($_POST['name_user']) && !empty($_POST['password_user'])) {
-    $get_request=[
+    $get_request = [
         'name_user' => htmlspecialchars($_POST['name_user']),
-        "password_user" => htmlspecialchars($_POST['password_user'])
+        'password_user' => htmlspecialchars($_POST['password_user'])
     ];
-
+    //appel a la function qui connecte l'utilisateur
     login_user($get_request);
 }
 
@@ -30,6 +29,7 @@ if (!empty($_POST['name_user']) && !empty($_POST['password_user'])) {
 </head>
 <body style="background-color: black;">
     <div class="anime"></div>
+    
     <div class="form-container">
     <?php if (isset($message)): ?>
         <div class="alert alert-danger"><?= $message ?></div>
@@ -50,9 +50,9 @@ if (!empty($_POST['name_user']) && !empty($_POST['password_user'])) {
                     <i class="fa-solid fa-lock"></i>
                 </span>
             </div>
-            
             <div class="form-option">  
-                <label for=""><input type="checkbox" required>Remember me</label>
+                <label for=""><input type="checkbox" re
+                quired>Remember me</label>
                 <a href="#">mot de passe oublié ?</a>
             </div>
             <button type="submit">se connecté</button>

@@ -4,6 +4,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 function db_connect() {
+    
     $host = 'localhost';
     $dbname = 'gestion_acte_naissance';
     $username = 'root';
@@ -17,5 +18,4 @@ function db_connect() {
         die("Erreur de connexion : " . $e->getMessage());
     }
 }
-
 ?>
